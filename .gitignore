@@ -1,35 +1,17 @@
-# Claude Code — personal config, never commit
-.claude/
-.claude-plugin-config.json
-
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
 
-# Editor
-.vscode/
+# Editors
 .idea/
+.vscode/
 *.swp
 *.swo
-*.iml
 
-# Credentials / secrets
-*.env
-secrets.*
-credentials.*
-*.jks
-*.keystore
+# Claude Code
+.claude/
+.playwright-mcp/
 
-# Logs
-*.log
-
-# Temp / build artifacts
-*.zip
-/build
-.gradle/
-
-# Private planning and spec docs
-PLUGIN_*.md
-SPEC_*.md
-PLAN_*.md
+# Local planning/spec files
+PLUGIN_4_KOTLIN_LSP.md

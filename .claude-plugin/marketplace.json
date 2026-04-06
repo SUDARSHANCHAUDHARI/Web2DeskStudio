@@ -1,9 +1,27 @@
 {
   "name": "kotlinsense",
-  "display_name": "Kotlin Language Server",
-  "description": "Kotlin code intelligence for Claude Code — automatic type checking, import resolution, and go-to-definition for Android and Kotlin projects.",
-  "category": "language-support",
-  "tags": ["kotlin", "android", "lsp", "type-checking"],
-  "requires_binary": true,
-  "binary_name": "kotlin-language-server"
+  "metadata": {
+    "description": "Kotlin language server for Claude Code. Automatic type-error diagnostics, missing import detection, and code navigation for Android and Kotlin projects."
+  },
+  "owner": {
+    "name": "SUDARSHANCHAUDHARI",
+    "email": "sudarshantechlabs@gmail.com"
+  },
+  "plugins": [
+    {
+      "name": "kotlinsense",
+      "description": "Kotlin language server for Claude Code. Automatic type-error diagnostics, missing import detection, and code navigation for Android and Kotlin projects.",
+      "version": "1.0.0",
+      "source": "./",
+      "category": "language-support",
+      "author": {
+        "name": "SUDARSHANCHAUDHARI",
+        "email": "sudarshantechlabs@gmail.com"
+      },
+      "homepage": "https://github.com/SUDARSHANCHAUDHARI/KotlinSense",
+      "repository": "https://github.com/SUDARSHANCHAUDHARI/KotlinSense",
+      "license": "MIT",
+      "keywords": ["kotlin", "android", "lsp", "language-server", "type-checking", "code-intelligence"]
+    }
+  ]
 }
