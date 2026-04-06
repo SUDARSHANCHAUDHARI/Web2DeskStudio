@@ -1,0 +1,18 @@
+# Claude Code internal config — never commit
+.claude/
+
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Private planning and notes
+PLUGIN_4_KOTLIN_LSP.md
+
+# Editor
+.vscode/
+.idea/
+*.iml
+
+# Temp / build artifacts
+*.zip
+*.log
