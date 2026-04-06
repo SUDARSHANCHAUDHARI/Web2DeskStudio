@@ -26,13 +26,13 @@ else
     FAIL=$((FAIL + 1))
 fi
 
-# Check ~/.local/bin in PATH (common install location)
+# Check ~/.local/bin in PATH
 if [[ ":$PATH:" == *":$HOME/.local/bin:"* ]]; then
     echo "✓ \$HOME/.local/bin is in PATH"
     PASS=$((PASS + 1))
 else
-    echo "! \$HOME/.local/bin is NOT in PATH (may be needed after install)"
-    echo "  Add it: echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ~/.zshrc"
+    echo "! \$HOME/.local/bin is NOT in PATH"
+    echo "  Add it: echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ~/.zshrc && source ~/.zshrc"
 fi
 
 echo ""
