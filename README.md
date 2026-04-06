@@ -11,7 +11,7 @@ Works for any Kotlin or Android developer. No project-specific config needed —
 ### Step 1 — Install the plugin
 
 ```bash
-/plugin install kotlinsense@SUDARSHANCHAUDHARI-KotlinSense
+/plugin install kotlinsense
 ```
 
 ### Step 2 — Install the language server binary
