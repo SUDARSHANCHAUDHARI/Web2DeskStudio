@@ -1,0 +1,9 @@
+{
+  "name": "kotlinsense",
+  "display_name": "Kotlin Language Server",
+  "description": "Kotlin code intelligence for Claude Code — automatic type checking, import resolution, and go-to-definition for Android and Kotlin projects.",
+  "category": "language-support",
+  "tags": ["kotlin", "android", "lsp", "type-checking"],
+  "requires_binary": true,
+  "binary_name": "kotlin-language-server"
+}
