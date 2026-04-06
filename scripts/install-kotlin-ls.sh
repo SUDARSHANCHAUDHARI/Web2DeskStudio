@@ -2,8 +2,8 @@
 set -e
 
 KOTLIN_LS_VERSION="1.3.13"
-INSTALL_DIR="$HOME/.local/bin"
 LS_HOME="$HOME/.kotlin-language-server"
+INSTALL_DIR="$HOME/.local/bin"
 DOWNLOAD_URL="https://github.com/fwcd/kotlin-language-server/releases/download/${KOTLIN_LS_VERSION}/server.zip"
 
 echo "Installing Kotlin Language Server v${KOTLIN_LS_VERSION}..."
@@ -21,15 +21,12 @@ if [ -n "$JAVA_VERSION" ] && [ "$JAVA_VERSION" -lt "17" ] 2>/dev/null; then
 fi
 
 # Check if already installed
-if command -v kotlin-language-server &> /dev/null; then
+if command -v kotlin-language-server &> /dev/null && [ "$1" != "--force" ]; then
     echo "kotlin-language-server is already installed at: $(which kotlin-language-server)"
     echo "Run with --force to reinstall."
-    if [ "$1" != "--force" ]; then
-        exit 0
-    fi
+    exit 0
 fi
 
-# Create install directories
 mkdir -p "$INSTALL_DIR"
 TEMP_DIR=$(mktemp -d)
 trap "rm -rf '$TEMP_DIR'" EXIT
@@ -40,48 +37,32 @@ if command -v curl &> /dev/null; then
 elif command -v wget &> /dev/null; then
     wget -q "$DOWNLOAD_URL" -O "$TEMP_DIR/server.zip"
 else
-    echo "ERROR: curl or wget is required for download."
+    echo "ERROR: curl or wget is required."
     exit 1
 fi
 
 echo "Extracting..."
-unzip -q "$TEMP_DIR/server.zip" -d "$TEMP_DIR/kotlin-ls"
+unzip -q "$TEMP_DIR/server.zip" -d "$TEMP_DIR/extracted"
 
-# Install to home directory
+# The zip extracts to server/ — copy the whole thing to LS_HOME
 rm -rf "$LS_HOME"
 mkdir -p "$LS_HOME"
+cp -r "$TEMP_DIR/extracted/server/"* "$LS_HOME/"
+chmod +x "$LS_HOME/bin/kotlin-language-server"
 
-# The zip extracts to a 'server' subdirectory
-if [ -d "$TEMP_DIR/kotlin-ls/server" ]; then
-    cp -r "$TEMP_DIR/kotlin-ls/server/"* "$LS_HOME/"
-else
-    cp -r "$TEMP_DIR/kotlin-ls/"* "$LS_HOME/"
-fi
-
-# Create the wrapper script in PATH
-cat > "$INSTALL_DIR/kotlin-language-server" << EOF
-#!/bin/bash
-exec java -jar "\$HOME/.kotlin-language-server/bin/kotlin-language-server.jar" "\$@"
-EOF
-chmod +x "$INSTALL_DIR/kotlin-language-server"
+# Symlink the binary into PATH — the script resolves symlinks to find its own lib/
+ln -sf "$LS_HOME/bin/kotlin-language-server" "$INSTALL_DIR/kotlin-language-server"
 
 echo ""
 echo "Installation complete!"
-echo "kotlin-language-server installed to: $INSTALL_DIR/kotlin-language-server"
+echo "Binary:  $LS_HOME/bin/kotlin-language-server"
+echo "Symlink: $INSTALL_DIR/kotlin-language-server"
 echo ""
 
-# Check if INSTALL_DIR is in PATH
 if [[ ":$PATH:" != *":$INSTALL_DIR:"* ]]; then
-    echo "NOTE: $INSTALL_DIR is not in your PATH."
-    echo "Add it by running:"
-    echo ""
+    echo "NOTE: $INSTALL_DIR is not in your PATH. Add it:"
     echo "  echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ~/.zshrc && source ~/.zshrc"
-    echo ""
-    echo "  (replace .zshrc with .bashrc if you use bash)"
     echo ""
 fi
 
-echo "Verify installation:"
-echo "  kotlin-language-server --version"
-echo ""
-echo "Then run /kotlinsense:status in Claude Code to confirm."
+echo "Verify: kotlin-language-server --version"

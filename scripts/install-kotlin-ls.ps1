@@ -2,7 +2,7 @@
 $ErrorActionPreference = "Stop"
 
 $KOTLIN_LS_VERSION = "1.3.13"
-$INSTALL_DIR = "$env:LOCALAPPDATA\Programs\kotlin-language-server"
+$LS_HOME = "$env:USERPROFILE\.kotlin-language-server"
 $DOWNLOAD_URL = "https://github.com/fwcd/kotlin-language-server/releases/download/$KOTLIN_LS_VERSION/server.zip"
 
 Write-Host "Installing Kotlin Language Server v$KOTLIN_LS_VERSION..."
@@ -24,8 +24,6 @@ if ($existing -and $args -notcontains "--force") {
     exit 0
 }
 
-# Create install directory
-New-Item -ItemType Directory -Force -Path $INSTALL_DIR | Out-Null
 $TEMP_DIR = Join-Path ([System.IO.Path]::GetTempPath()) ([System.Guid]::NewGuid().ToString())
 New-Item -ItemType Directory -Force -Path $TEMP_DIR | Out-Null
 
@@ -35,37 +33,28 @@ try {
     Invoke-WebRequest -Uri $DOWNLOAD_URL -OutFile "$TEMP_DIR\server.zip" -UseBasicParsing
 
     Write-Host "Extracting..."
-    Expand-Archive -Path "$TEMP_DIR\server.zip" -DestinationPath "$TEMP_DIR\kotlin-ls" -Force
+    Expand-Archive -Path "$TEMP_DIR\server.zip" -DestinationPath "$TEMP_DIR\extracted" -Force
 
-    # Copy server files to install directory
-    $serverDir = "$TEMP_DIR\kotlin-ls\server"
-    if (Test-Path $serverDir) {
-        Copy-Item -Path "$serverDir\*" -Destination $INSTALL_DIR -Recurse -Force
-    } else {
-        Copy-Item -Path "$TEMP_DIR\kotlin-ls\*" -Destination $INSTALL_DIR -Recurse -Force
-    }
+    # The zip extracts to server/ — copy the whole thing to LS_HOME
+    if (Test-Path $LS_HOME) { Remove-Item -Recurse -Force $LS_HOME }
+    Copy-Item -Path "$TEMP_DIR\extracted\server" -Destination $LS_HOME -Recurse -Force
 
-    # Create batch wrapper
-    $jarPath = "$INSTALL_DIR\bin\kotlin-language-server.jar"
-    $wrapperContent = "@echo off`r`njava -jar `"$jarPath`" %*"
-    Set-Content -Path "$INSTALL_DIR\kotlin-language-server.bat" -Value $wrapperContent -Encoding ASCII
-
-    # Add to user PATH if not already there
+    # The real binary is server/bin/kotlin-language-server.bat
+    # Add bin/ to user PATH so it's directly invokable
+    $binDir = "$LS_HOME\bin"
     $currentPath = [Environment]::GetEnvironmentVariable("PATH", "User")
-    if ($currentPath -notlike "*$INSTALL_DIR*") {
-        [Environment]::SetEnvironmentVariable("PATH", "$currentPath;$INSTALL_DIR", "User")
-        Write-Host "Added $INSTALL_DIR to your user PATH."
+    if ($currentPath -notlike "*$binDir*") {
+        [Environment]::SetEnvironmentVariable("PATH", "$currentPath;$binDir", "User")
+        Write-Host "Added $binDir to your user PATH."
         Write-Host "Restart your terminal for the PATH change to take effect."
     }
 
     Write-Host ""
     Write-Host "Installation complete!"
-    Write-Host "kotlin-language-server installed to: $INSTALL_DIR"
+    Write-Host "Binary: $binDir\kotlin-language-server.bat"
     Write-Host ""
     Write-Host "Restart your terminal, then verify with:"
     Write-Host "  kotlin-language-server --version"
-    Write-Host ""
-    Write-Host "Then run /kotlinsense:status in Claude Code to confirm."
 
 } finally {
     Remove-Item -Recurse -Force $TEMP_DIR -ErrorAction SilentlyContinue
