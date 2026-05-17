@@ -15,3 +15,6 @@
 
 # Local planning/spec files
 PLUGIN_4_KOTLIN_LSP.md
+
+# graphify knowledge graph
+graphify-out/
