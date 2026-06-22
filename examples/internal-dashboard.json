@@ -1,0 +1,11 @@
+{
+  "name": "Internal Dashboard",
+  "url": "https://dashboard.example.com",
+  "width": 1920,
+  "height": 1080,
+  "fullscreen": true,
+  "kiosk": true,
+  "hideTitleBar": true,
+  "icon": "./icons/dashboard.png",
+  "injectCss": "./custom.css"
+}

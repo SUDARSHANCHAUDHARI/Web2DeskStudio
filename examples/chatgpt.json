@@ -1,0 +1,10 @@
+{
+  "name": "ChatGPT",
+  "url": "https://chat.openai.com",
+  "width": 1280,
+  "height": 900,
+  "fullscreen": false,
+  "kiosk": false,
+  "hideTitleBar": false,
+  "icon": "./icons/chatgpt.png"
+}

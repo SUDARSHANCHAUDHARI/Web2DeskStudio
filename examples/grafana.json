@@ -1,0 +1,10 @@
+{
+  "name": "Grafana Dashboard",
+  "url": "https://grafana.example.com",
+  "width": 1440,
+  "height": 900,
+  "fullscreen": false,
+  "kiosk": true,
+  "hideTitleBar": true,
+  "icon": "./icons/grafana.png"
+}
