@@ -44,3 +44,4 @@ __pycache__/
 *.tsbuildinfo
 *.sqlite
 *.db
+pnpm-lock.yaml
